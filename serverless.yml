@@ -1,0 +1,26 @@
+service: let-me-know-web # NOTE: update this with your service name
+
+custom:
+  stage: ${opt:stage,'dev'}
+  region: ${opt:region,'eu-west-1'}
+  client:
+    bucketName: let-me-know-web-${self:custom.stage}
+    distributionFolder: ./build
+    objectHeaders:
+      'index.html':
+        - name: 'Cache-Control'
+          value: 'no-cache'
+      '*.js':
+        - name: 'Cache-Control'
+          value: 'public, max-age=31536000'
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: ${self:custom.stage}
+  region: ${self:custom.region}
+  environment:
+    NODE_ENV: ${self:custom.stage}
+    REGION: ${self:custom.region}
+
+plugins:
+  - serverless-finch
