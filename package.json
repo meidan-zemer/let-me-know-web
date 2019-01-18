@@ -32,8 +32,6 @@
     "not op_mini all"
   ],
   "devDependencies": {
-    "serverless": "^1.36.0",
-    "serverless-finch": "^2.3.2",
-    "serverless-s3-sync": "^1.7.1"
+    "firebase-tools": "^6.3.0"
   }
 }
