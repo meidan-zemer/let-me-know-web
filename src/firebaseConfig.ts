@@ -3,8 +3,11 @@
 
 import firebase from 'firebase';
 import 'firebase/firestore';
+import 'firebase/auth';
+import 'firebase/database';
+import 'firebase/firestore';
 
-export const config = {
+const config = {
   apiKey: "AIzaSyD55ZWqiyRUAoGv-XPXVlSULQkrsQ4BDGI",
   authDomain: "let-me-know-36373.firebaseapp.com",
   databaseURL: "https://let-me-know-36373.firebaseio.com",
@@ -16,4 +19,6 @@ export const config = {
 
 firebase.initializeApp(config);
 firebase.firestore();
+
+export const contactPointsCollectionName = "contactPoints";
 export default firebase;

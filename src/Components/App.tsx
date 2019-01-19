@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
-import { createStore,compose  } from 'redux';
+import { createStore, compose  } from 'redux';
 import {reactReduxFirebase} from 'react-redux-firebase';
+import { reduxFirestore,} from 'redux-firestore'
 import rootReducer from '../redux/rootReducer';
 import Main from './Main';
 import firebase from '../firebaseConfig';
@@ -13,9 +14,12 @@ const rrfConfig = {
 //  userProfile: 'users',
   // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
 };
-const createStoreWithFirebase = compose(
+
+const createStoreWithFirebase = compose<any,any,any>(
+    reduxFirestore(firebase),
     reactReduxFirebase(firebase, rrfConfig)
-)(createStore);
+)(createStore)
+
 
 const initialState = {};
 const store = createStoreWithFirebase(rootReducer, initialState);

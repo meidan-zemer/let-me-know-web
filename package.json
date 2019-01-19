@@ -42,6 +42,7 @@
     "@types/react-router": "^4.4.3",
     "@types/react-router-dom": "^4.3.1",
     "@types/redux": "^3.6.0",
+    "let-me-know-ts-definitions": "git+https://github.com/meidan-zemer/let-me-know-ts-definitions.git",
     "firebase-tools": "^6.3.0",
     "prettier": "^1.15.3",
     "typescript": "3.2.2"

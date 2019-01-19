@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import {compose} from 'redux';
 import PopUp from 'reactjs-popup';
+import {contactPoint} from 'let-me-know-ts-definitions';
+import { withFirebase } from 'react-redux-firebase'
 import { firestoreConnect } from 'react-redux-firebase'
-import { compose } from 'redux'
-import { connect } from 'react-redux'
-
-interface props {}
-
-interface state {
+import {contactPointsCollectionName} from '../firebaseConfig';
+interface compState {
   addContactPointPopup: {
     open: boolean;
     name: string;
     description: string;
   };
 }
-
-class ContactPoints extends Component<props, state> {
-  constructor(props: props) {
+interface props {
+    contactPoints:contactPoint[];
+    firestore:any;
+    firebase:any;
+}
+class ContactPoints extends Component<props, compState> {
+  constructor(props: any) {
     super(props);
     this.state = {
       addContactPointPopup: {
@@ -26,19 +30,44 @@ class ContactPoints extends Component<props, state> {
     };
   }
 
+  setPopup(open:boolean){
+      this.setState({ ...this.state, addContactPointPopup: { ...this.state.addContactPointPopup, open: open } });
+  }
   addNewContactPoint() {
-    alert('name:' + this.state.addContactPointPopup.name);
-    this.setState({ ...this.state, addContactPointPopup: { ...this.state.addContactPointPopup, open: false } });
+      let newCpDocRef = this.props.firestore.collection(contactPointsCollectionName).doc();
+      let cp:contactPoint = {
+          cpId: newCpDocRef.id,
+          name:this.state.addContactPointPopup.name,
+          description:this.state.addContactPointPopup.description,
+          createDate:this.props.firestore.FieldValue.serverTimestamp(),
+          modifyDate:this.props.firestore.FieldValue.serverTimestamp(),
+          userId: this.props.firebase.auth().currentUser.uid
+      };
+      newCpDocRef.set(cp)
+        .then(()=>{
+            this.setPopup(false);
+        })
+        .catch((err:any)=>{
+            console.log(err);
+        });
   }
   render() {
     return (
       <div>
         <h1>Contact Points</h1>
-        <PopUp
-          trigger={<button>Add Contact Point</button>}
+          <button onClick={()=>this.setPopup(true)}>Add Contact Point</button>
+          {
+              this.props.contactPoints ?
+              this.props.contactPoints.map((cp:contactPoint) =>
+              <div> {cp.name} </div>
+              )
+                  :
+                  null
+          }
+          <PopUp
+          open={this.state.addContactPointPopup.open}
           modal
           closeOnDocumentClick
-          open={this.state.addContactPointPopup.open}
         >
           <div>
             <h1>New Contact Point</h1>
@@ -78,4 +107,29 @@ class ContactPoints extends Component<props, state> {
   }
 }
 
-export default firestoreConnect()(ContactPoints);
+const mapStateToProps = (state:any) => {
+    return {
+        contactPoints: state.firestore.ordered[contactPointsCollectionName] ? state.firestore.ordered[contactPointsCollectionName] : [],
+    }
+}
+
+const mapDispatchToProps = {}
+
+
+export default compose(
+    withFirebase,
+    connect(mapStateToProps, mapDispatchToProps),
+    firestoreConnect((props:props) => {
+            const uid= props.firebase.auth().currentUser.uid;
+            if (!uid) return []
+            return [
+                {
+                    collection: contactPointsCollectionName,
+                    where: [
+                        ['userId', '==', uid]
+                    ]
+                }
+            ]
+        }
+    )
+)(ContactPoints);

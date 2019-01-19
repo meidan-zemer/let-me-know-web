@@ -11,36 +11,36 @@ interface props {
   firebase: {
     login:(arg:any)=>any;
     logout:()=>any;
-    auth:()=>{currentUser:any};
+    auth:()=>any;
   }
 }
 
 interface state {
-  isSignIn:boolean;
+  user:any;
 }
 class Main extends Component<props,state>{
   constructor(props:props){
     super(props);
-    let isSignIn = false;
-    if( props && props.firebase && props.firebase.auth().currentUser !== null){
-      isSignIn = true;
-    }
-    this.state = {
-      isSignIn:isSignIn
+    this.state={
+      user:null
     };
+    const that = this;
+    props.firebase.auth().onAuthStateChanged(function(user:any) {
+      that.setState({ user: user });
+    });
   }
   googleSignIn(){
     this.props.firebase.login({ provider: 'google', type: 'popup' })
-        .then(()=>this.setState({isSignIn:true}));
+        .then((user:any)=>this.setState({user:user}));
 
   }
   logout(){
     this.props.firebase.logout()
-        .then(()=>this.setState({isSignIn:false}));
+        .then(()=>console.log("logout"));
   }
   render() {
     let rc = null;
-    if (!this.state.isSignIn) {
+    if ( !this.state.user ) {
       rc = <GoogleSignIn login={()=>this.googleSignIn()} />;
     } else {
       rc = (
