@@ -66,6 +66,7 @@ class ContactPoints extends Component<props, compState> {
           }
           <PopUp
           open={this.state.addContactPointPopup.open}
+          onClose={()=>this.setPopup(false)}
           modal
           closeOnDocumentClick
         >
