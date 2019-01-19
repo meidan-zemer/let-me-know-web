@@ -1,1 +1,1 @@
-declare module 'react-auth-firebase';
+declare module 'react-auth-firebase';

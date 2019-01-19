@@ -1,46 +1,33 @@
 import React, { Component } from 'react';
-import firebase from "../firebaseConfig"; // Careful to not import from "firebase"
-import {User} from 'firebase';
-import {withFirebaseAuth} from 'react-auth-firebase';
+import { Provider } from 'react-redux';
+import { createStore,compose  } from 'redux';
+import {reactReduxFirebase} from 'react-redux-firebase';
+import rootReducer from '../redux/rootReducer';
 import Main from './Main';
-import SignIn from './SignIn';
+import firebase from '../firebaseConfig';
+import 'firebase/auth';
+import 'firebase/firestore';
 
-interface props{
-  signInWithGoogle: ()=>Promise<any>;
-  googleAccessToken: string |null;
-  signOut: ()=>any;
-  user: User;
-  error: any;
-}
+// react-redux-firebase config
+const rrfConfig = {
+//  userProfile: 'users',
+  // useFirestoreForProfile: true // Firestore for Profile instead of Realtime DB
+};
+const createStoreWithFirebase = compose(
+    reactReduxFirebase(firebase, rrfConfig)
+)(createStore);
 
-class App extends Component<props> {
+const initialState = {};
+const store = createStoreWithFirebase(rootReducer, initialState);
+
+class App extends Component {
   render() {
-    const {
-      signInWithGoogle,
-      googleAccessToken,
-      signOut,
-      user,
-      error
-    } = this.props;
-
-    let rc= null;
-    if (this.props.user === null){
-      rc = <SignIn signInWithGoogle={this.props.signInWithGoogle}/>
-    } else if(this.props.error){
-      rc = <div>{this.props.error}</div>
-    } else {
-      rc = <Main signOut={this.props.signOut} user={this.props.user}/>
-    }
-    return rc;
+    return (
+      <Provider store={store}>
+          <Main />
+      </Provider>
+    );
   }
 }
 
-
-const authConfig = {
-  google: {
-    // redirect: true, // Opens a pop up by default
-    returnAccessToken: true, // Returns an access token as googleAccessToken prop
-    saveUserInDatabase: true // Saves user in database at /users ref
-  }
-}
-export default withFirebaseAuth(App, firebase, authConfig);
+export default App;

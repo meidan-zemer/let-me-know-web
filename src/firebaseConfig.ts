@@ -1,21 +1,19 @@
 //firebaseConfig.js
 //
 
-import firebase from "firebase";
+import firebase from 'firebase';
+import 'firebase/firestore';
 
-// https://firebase.google.com/docs/web/setup?authuser=0
-
-// See firebase setup in above google firebase documentation url
 export const config = {
-    apiKey: "AIzaSyD55ZWqiyRUAoGv-XPXVlSULQkrsQ4BDGI",
-    authDomain: "let-me-know-36373.firebaseapp.com",
-    projectId: "let-me-know-36373"
-//    databaseURL: "----",
-//    storageBucket: "----",
-//    messagingSenderId: "----"
+  apiKey: "AIzaSyD55ZWqiyRUAoGv-XPXVlSULQkrsQ4BDGI",
+  authDomain: "let-me-know-36373.firebaseapp.com",
+  databaseURL: "https://let-me-know-36373.firebaseio.com",
+  projectId: "let-me-know-36373",
+  storageBucket: "let-me-know-36373.appspot.com",
+  messagingSenderId: "295381570076"
 };
 
 
 firebase.initializeApp(config);
-
+firebase.firestore();
 export default firebase;
