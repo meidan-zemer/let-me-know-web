@@ -9,7 +9,7 @@ class Header extends Component<props> {
   render() {
     return (
       <div>
-        <span> Welcome {this.props.user.displayName}</span>
+        <span> Welcome {this.props.user.displayName}  </span>
         <button onClick={() => this.props.signOut()}>Sign out </button>
       </div>
     );

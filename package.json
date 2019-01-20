@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@material-ui/core": "^3.9.0",
     "firebase": "^5.8.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
@@ -42,8 +43,8 @@
     "@types/react-router": "^4.4.3",
     "@types/react-router-dom": "^4.3.1",
     "@types/redux": "^3.6.0",
-    "let-me-know-ts-definitions": "git+https://github.com/meidan-zemer/let-me-know-ts-definitions.git",
     "firebase-tools": "^6.3.0",
+    "let-me-know-ts-definitions": "git+https://github.com/meidan-zemer/let-me-know-ts-definitions.git#master",
     "prettier": "^1.15.3",
     "typescript": "3.2.2"
   }

@@ -20,5 +20,6 @@ const config = {
 firebase.initializeApp(config);
 firebase.firestore();
 
-export const contactPointsCollectionName = "contactPoints";
+export const  contactPointsCollectionName = "contactPoints";
+export const discussionSubCollectionName = "contactPointDiscussions";
 export default firebase;

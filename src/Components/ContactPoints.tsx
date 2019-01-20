@@ -2,10 +2,23 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import {compose} from 'redux';
 import PopUp from 'reactjs-popup';
+import {Link} from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';;
+import ListItem from '@material-ui/core/ListItem';
 import {contactPoint} from 'let-me-know-ts-definitions';
 import { withFirebase } from 'react-redux-firebase'
 import { firestoreConnect } from 'react-redux-firebase'
 import {contactPointsCollectionName} from '../firebaseConfig';
+
+const styles = (theme:any) => ({
+    root: {
+        width: '100%',
+        maxWidth: 360,
+        backgroundColor: theme.palette.background.paper,
+    },
+});
+
 interface compState {
   addContactPointPopup: {
     open: boolean;
@@ -17,6 +30,7 @@ interface props {
     contactPoints:contactPoint[];
     firestore:any;
     firebase:any;
+    classes:any;
 }
 class ContactPoints extends Component<props, compState> {
   constructor(props: any) {
@@ -34,8 +48,8 @@ class ContactPoints extends Component<props, compState> {
       this.setState({ ...this.state, addContactPointPopup: { ...this.state.addContactPointPopup, open: open } });
   }
   addNewContactPoint() {
-      let newCpDocRef = this.props.firestore.collection(contactPointsCollectionName).doc();
-      let cp:contactPoint = {
+      const newCpDocRef = this.props.firestore.collection(contactPointsCollectionName).doc();
+      const cp:contactPoint = {
           cpId: newCpDocRef.id,
           name:this.state.addContactPointPopup.name,
           description:this.state.addContactPointPopup.description,
@@ -55,15 +69,24 @@ class ContactPoints extends Component<props, compState> {
     return (
       <div>
         <h1>Contact Points</h1>
-          <button onClick={()=>this.setPopup(true)}>Add Contact Point</button>
+          <div><button onClick={()=>this.setPopup(true)}>Add Contact Point</button></div>
+          <List className={this.props.classes.root}>
           {
-              this.props.contactPoints ?
-              this.props.contactPoints.map((cp:contactPoint) =>
-              <div> {cp.name} </div>
-              )
-                  :
-                  null
-          }
+                  this.props.contactPoints ?
+                      this.props.contactPoints.map((cp:contactPoint,index:number) =>{
+                       return (
+                           <ListItem key={index}>
+                               <div>
+                                   <Link to={'/ContactPoint/'+cp.cpId}><span> {cp.name} </span></Link>
+                               </div>
+                           </ListItem>
+
+                       );
+                      })
+                      :
+                      null
+              }
+          </List>
           <PopUp
           open={this.state.addContactPointPopup.open}
           onClose={()=>this.setPopup(false)}
@@ -132,5 +155,6 @@ export default compose(
                 }
             ]
         }
-    )
+    ),
+    withStyles(styles)
 )(ContactPoints);

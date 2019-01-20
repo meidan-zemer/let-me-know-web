@@ -2,10 +2,15 @@ import React, { Component } from 'react';
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 import { withFirebase } from 'react-redux-firebase';
-import { BrowserRouter, Route } from 'react-router-dom';
+import {  Route,Router} from 'react-router-dom';
+import  createBrowserHistory from 'history/createBrowserHistory';
 import Header from './Header';
 import ContactPoints from './ContactPoints';
-import GoogleSignIn from './GoogleSignIn';
+import SignIn from './SignIn';
+import ContactPointDiscussion from './ContactPointDiscussion';
+
+const history = createBrowserHistory()
+
 
 interface props {
   firebase: {
@@ -39,21 +44,21 @@ class Main extends Component<props,state>{
         .then(()=>console.log("logout"));
   }
   render() {
-    let rc = null;
-    if ( !this.state.user ) {
-      rc = <GoogleSignIn login={()=>this.googleSignIn()} />;
-    } else {
-      rc = (
-        <BrowserRouter>
-          <div>
-            <Header user={this.props.firebase.auth().currentUser} signOut={()=>this.logout()} />
-            <Route path="/" component={ContactPoints} />
-          </div>
-        </BrowserRouter>
-      );
+    return (
+        <Router history={history}>
+          {
+            this.state.user ?
+                <div>
+                  <Header user={this.props.firebase.auth().currentUser} signOut={()=>this.logout()} />
+                  <Route path="/ContactPoint/:cpId" component={ContactPointDiscussion}/>
+                  <Route  exact  path="/" component={ContactPoints} />
+                </div>
+                :
+                <SignIn googleLogin={()=>this.googleSignIn()} />
+          }
+        </Router>
+        );
     }
-    return rc;
-  }
 }
 
 export default compose(
