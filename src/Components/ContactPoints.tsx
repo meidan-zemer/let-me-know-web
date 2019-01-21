@@ -53,8 +53,8 @@ class ContactPoints extends Component<props, compState> {
           cpId: newCpDocRef.id,
           name:this.state.addContactPointPopup.name,
           description:this.state.addContactPointPopup.description,
-          createDate:this.props.firestore.FieldValue.serverTimestamp(),
-          modifyDate:this.props.firestore.FieldValue.serverTimestamp(),
+          createdDate:this.props.firestore.FieldValue.serverTimestamp(),
+          modifiedDate:this.props.firestore.FieldValue.serverTimestamp(),
           userId: this.props.firebase.auth().currentUser.uid
       };
       newCpDocRef.set(cp)

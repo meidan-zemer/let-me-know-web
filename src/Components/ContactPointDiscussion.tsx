@@ -11,7 +11,6 @@ import {match} from 'react-router';
 import {contactPoint, discussion} from 'let-me-know-ts-definitions';
 import {contactPointsCollectionName, discussionSubCollectionName } from "../firebaseConfig";
 
-
 const styles = (theme:any) => ({
     root: {
         width: '100%',
@@ -33,9 +32,9 @@ interface props {
 
 class ContactPointDiscussion extends Component<props>{
 
-    renderDiscussion(discussion:discussion){
+    renderDiscussion(discussion:discussion, index:number){
         return (
-            <ListItem>
+            <ListItem key={index}>
                 <div>
                     <span>{discussion.title}</span>
                 </div>
@@ -46,13 +45,14 @@ class ContactPointDiscussion extends Component<props>{
         const newDiscusstionRef = this.props.firestore.collection(contactPointsCollectionName)
             .doc(this.props.cp.cpId).
             collection(discussionSubCollectionName)
-            .doc();
+            .doc(this.props.uid);
         const newDiscussion:discussion={
-            title:"New Discussion",
-            discussionId:newDiscusstionRef.id,
+            title:"",
             connectorId:this.props.uid,
-            createdDate:this.props.firestore.FieldValue.serverTimestamp()
-        }
+            createdDate:this.props.firestore.FieldValue.serverTimestamp(),
+            modifiedDate:this.props.firestore.FieldValue.serverTimestamp(),
+            connectorAlias: ""
+        };
         newDiscusstionRef.set(newDiscussion)
             .then((res:any)=>console.log(res))
             .catch((err:any)=>console.log(err));
@@ -62,11 +62,11 @@ class ContactPointDiscussion extends Component<props>{
             <div>
                 <h1>{this.props.cp.name}</h1>
                 <List subheader={<ListSubheader component="div">My Contact Points Discussions</ListSubheader>}>
-                    {this.props.ownDiscussions.map((d)=>this.renderDiscussion(d))}
+                    {this.props.ownDiscussions.map((d,i)=>this.renderDiscussion(d,i))}
                 </List>
                 <div><button onClick={()=>this.addDiscussion()}>Add Discussion</button></div>
                 <List subheader={<ListSubheader component="div">Discussions I Started</ListSubheader>}>
-                    {this.props.connectorDiscussions.map((d)=>this.renderDiscussion(d))}
+                    {this.props.connectorDiscussions.map((d,i)=>this.renderDiscussion(d,i))}
                 </List>
             </div>
         );
@@ -110,7 +110,7 @@ export default compose(
                 {
                     collection: contactPointsCollectionName,
                     doc:props.match.params.cpId,
-                    subCollections:[
+                    subcollections:[
                         {
                             collection:discussionSubCollectionName
                         }
@@ -120,7 +120,7 @@ export default compose(
                 {
                     collection: contactPointsCollectionName,
                     doc:props.match.params.cpId,
-                    subCollections:[
+                    subcollections:[
                         {
                             collection: discussionSubCollectionName,
                             where: [
