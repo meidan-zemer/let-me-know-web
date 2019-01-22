@@ -9,7 +9,7 @@ class SignIn extends Component<props> {
       <div>
         <h1>Let Me Know</h1>
         <p> Please sign in using you google account</p>
-        <button onClick={()=>this.props.googleLogin()}>Sign In</button>
+        <button onClick={() => this.props.googleLogin()}>Sign In</button>
       </div>
     );
   }
