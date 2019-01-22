@@ -4,15 +4,16 @@ import { compose } from 'redux';
 import { firestoreConnect, withFirebase, isLoaded, isEmpty } from 'react-redux-firebase';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { match } from 'react-router';
 import { contactPointType, discussionType, messageType } from 'let-me-know-ts-definitions';
+import EditableText from './EditableText';
 import {
   contactPointsCollectionName,
   discussionsSubCollectionName,
   messagesSubCollectionName,
 } from '../firebaseConfig';
-import firebase from 'firebase';
 
 const styles = (theme: any) => ({
   root: {
@@ -28,6 +29,7 @@ interface props {
   uid: string;
   discussion: discussionType;
   messages: messageType[];
+  isDiscussionOwner: boolean;
   loaded: boolean;
   firestore: any;
   firebase: any;
@@ -78,6 +80,26 @@ class ContactPointDiscussion extends Component<props, state> {
       .doc(this.props.uid);
     newdiscussionDocRef.set(desc);
   }
+  updateDiscussionTitle(title: string) {
+    this.updateDiscussion({ title });
+  }
+  updateDiscussion(obj: any) {
+    let updatedDiscussion = {
+      ...this.props.discussion,
+      ...obj,
+      modifiedDate: this.props.firestore.FieldValue.serverTimestamp(),
+    };
+    this.props.firestore
+      .collection(contactPointsCollectionName)
+      .doc(this.props.cp.cpId)
+      .collection(discussionsSubCollectionName)
+      .doc(this.props.uid)
+      .update(updatedDiscussion);
+  }
+
+  updateDiscussionConnectorAlias(connectorAlias: string) {
+    this.updateDiscussion({ connectorAlias });
+  }
 
   getMessageSenderAlias(uid: string) {
     if (uid === this.props.uid) {
@@ -121,11 +143,12 @@ class ContactPointDiscussion extends Component<props, state> {
         console.log(err);
       });
   }
+
   render() {
     if (!this.props.loaded) {
       return <div>Loading...</div>;
     } else if (isEmpty(this.props.discussion)) {
-      if (this.props.uid === this.props.match.params.connectorId) {
+      if (this.props.isDiscussionOwner) {
         this.addDiscussion();
         return <div>Loading...</div>;
       } else {
@@ -134,15 +157,25 @@ class ContactPointDiscussion extends Component<props, state> {
     } else {
       return (
         <div>
-          <h1>{this.props.discussion.title}</h1>
+          <EditableText value={this.props.discussion.title}
+                        isEditable={this.props.isDiscussionOwner}
+                        onChange={title=>this.updateDiscussionTitle(title)}
+                        label={undefined}
+          />
+
+          <EditableText value={this.props.discussion.connectorAlias}
+                        isEditable={this.props.isDiscussionOwner}
+                        onChange={connectorAlias=>this.updateDiscussionConnectorAlias(connectorAlias)}
+                        label={"Connector Name"}
+          />
+
           <List>
             {this.props.messages
               .map((m, i) => this.renderMessage(m, i))
               .concat([
                 <ListItem key={this.props.messages.length}>
                   <div>
-                    <input
-                      type="text"
+                    <TextField
                       value={this.state.newMessageContent}
                       onChange={e => this.setState({ newMessageContent: e.target.value })}
                     />
@@ -171,6 +204,7 @@ const mapStateToProps = (state: any, ownprops: props) => {
   return {
     cp: cp,
     uid: uid,
+    isDiscussionOwner: ownprops.match.params.connectorId === uid,
     discussion,
     messages,
     loaded,
