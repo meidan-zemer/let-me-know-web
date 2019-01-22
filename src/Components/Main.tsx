@@ -8,6 +8,7 @@ import Header from './Header';
 import ContactPoints from './ContactPoints';
 import SignIn from './SignIn';
 import ContactPointDiscussion from './ContactPointDiscussion';
+import ContactPoint from './ContactPoint';
 
 const history = createBrowserHistory()
 
@@ -50,8 +51,9 @@ class Main extends Component<props,state>{
             this.state.user ?
                 <div>
                   <Header user={this.props.firebase.auth().currentUser} signOut={()=>this.logout()} />
-                  <Route path="/ContactPoint/:cpId" component={ContactPointDiscussion}/>
-                  <Route  exact  path="/" component={ContactPoints} />
+                  <Route path="/ContactPoint/:cpId/:connectorId" component={ContactPointDiscussion}/>
+                  <Route exact path="/ContactPoint/:cpId" component={ContactPoint}/>
+                  <Route exact  path="/" component={ContactPoints} />
                 </div>
                 :
                 <SignIn googleLogin={()=>this.googleSignIn()} />

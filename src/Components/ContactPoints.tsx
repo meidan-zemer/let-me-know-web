@@ -4,11 +4,11 @@ import {compose} from 'redux';
 import PopUp from 'reactjs-popup';
 import {Link} from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';;
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import {contactPoint} from 'let-me-know-ts-definitions';
-import { withFirebase } from 'react-redux-firebase'
-import { firestoreConnect } from 'react-redux-firebase'
+import { contactPoint } from 'let-me-know-ts-definitions';
+import { withFirebase } from 'react-redux-firebase';
+import { firestoreConnect } from 'react-redux-firebase';
 import {contactPointsCollectionName} from '../firebaseConfig';
 
 const styles = (theme:any) => ({
@@ -55,7 +55,8 @@ class ContactPoints extends Component<props, compState> {
           description:this.state.addContactPointPopup.description,
           createdDate:this.props.firestore.FieldValue.serverTimestamp(),
           modifiedDate:this.props.firestore.FieldValue.serverTimestamp(),
-          userId: this.props.firebase.auth().currentUser.uid
+          userId: this.props.firebase.auth().currentUser.uid,
+          ownerAlias:""
       };
       newCpDocRef.set(cp)
         .then(()=>{
