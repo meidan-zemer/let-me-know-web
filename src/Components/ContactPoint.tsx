@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
 import {match, Redirect } from 'react-router';
-import {contactPoint, discussion} from 'let-me-know-ts-definitions';
+import {contactPointType, discussionType} from 'let-me-know-ts-definitions';
 import {contactPointsCollectionName, discussionsSubCollectionName } from "../firebaseConfig";
 
 const styles = (theme:any) => ({
@@ -20,8 +20,8 @@ const styles = (theme:any) => ({
 
 interface props {
     match:match<{cpId:string}>;
-    cp:contactPoint;
-    allDiscussions: discussion[];
+    cp:contactPointType;
+    allDiscussions: discussionType[];
     uid:string;
     loaded:boolean;
     firestore:any;
@@ -31,7 +31,7 @@ interface props {
 
 class ContactPoint extends Component<props>{
 
-    renderDiscussion(dsc:discussion, index:number){
+    renderDiscussion(dsc:discussionType, index:number){
         return (
             <ListItem key={index}>
                 <div>
@@ -45,7 +45,7 @@ class ContactPoint extends Component<props>{
             .doc(this.props.cp.cpId).
             collection(discussionsSubCollectionName)
             .doc(this.props.uid);
-        const newDiscussion:discussion={
+        const newDiscussion:discussionType = {
             title:"",
             connectorId:this.props.uid,
             createdDate:this.props.firestore.FieldValue.serverTimestamp(),
@@ -79,8 +79,8 @@ class ContactPoint extends Component<props>{
 const mapStateToProps = (state:any,ownprops:props) => {
     const uid= ownprops.firebase.auth().currentUser.uid;
     const loaded = isLoaded(state.firestore.ordered.curCp) && isLoaded(state.firestore.ordered.allDiscussions)
-    let cp:contactPoint  = isLoaded(state.firestore.ordered.curCp) ? state.firestore.ordered.curCp[0] : {},
-        allDiscussions:discussion[] = state.firestore.ordered.allDiscussions;
+    let cp:contactPointType  = isLoaded(state.firestore.ordered.curCp) ? state.firestore.ordered.curCp[0] : {},
+        allDiscussions:discussionType[] = state.firestore.ordered.allDiscussions;
 
     return {
         cp:cp,

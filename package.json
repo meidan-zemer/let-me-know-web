@@ -45,7 +45,7 @@
     "@types/redux": "^3.6.0",
     "firebase-tools": "^6.3.0",
     "let-me-know-ts-definitions": "git+https://github.com/meidan-zemer/let-me-know-ts-definitions.git#master",
-    "prettier": "^1.15.3",
+    "prettier": "^1.16.0",
     "typescript": "3.2.2"
   }
 }

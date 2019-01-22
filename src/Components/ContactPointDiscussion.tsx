@@ -6,7 +6,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import { withStyles } from '@material-ui/core/styles';
 import {match} from 'react-router';
-import {contactPoint, discussion, message} from 'let-me-know-ts-definitions';
+import {contactPointType, discussionType, messageType} from 'let-me-know-ts-definitions';
 import {contactPointsCollectionName, discussionsSubCollectionName,messagesSubCollectionName } from "../firebaseConfig";
 
 const styles = (theme:any) => ({
@@ -19,10 +19,10 @@ const styles = (theme:any) => ({
 
 interface props {
     match:match<{cpId:string}>;
-    cp:contactPoint,
+    cp:contactPointType,
     uid:string,
-    discussion:discussion,
-    messages:message[],
+    discussion:discussionType,
+    messages:messageType[],
     loaded:boolean,
     firestore:any;
     firebase:any;
@@ -41,7 +41,7 @@ class ContactPointDiscussion extends Component<props,state>{
     }
 
 
-    renderMessage(msg:message, index:number){
+    renderMessage(msg:messageType, index:number){
         return (
             <ListItem key={index}>
                 <div>
@@ -54,7 +54,7 @@ class ContactPointDiscussion extends Component<props,state>{
     }
 
     addDiscussion(){
-        let desc:discussion ={
+        let desc:discussionType ={
             connectorId:this.props.uid,
             connectorAlias:"John Due",
             title:this.props.cp.name,
@@ -80,7 +80,7 @@ class ContactPointDiscussion extends Component<props,state>{
     }
 
     sendMessage(){
-        const msg:message = {
+        const msg:messageType = {
             createDate:this.props.firestore.FieldValue.serverTimestamp(),
             content: this.state.newMessageContent,
             from:this.props.uid

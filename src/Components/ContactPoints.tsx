@@ -6,7 +6,7 @@ import {Link} from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { contactPoint } from 'let-me-know-ts-definitions';
+import { contactPointType } from 'let-me-know-ts-definitions';
 import { withFirebase } from 'react-redux-firebase';
 import { firestoreConnect } from 'react-redux-firebase';
 import {contactPointsCollectionName} from '../firebaseConfig';
@@ -27,7 +27,7 @@ interface compState {
   };
 }
 interface props {
-    contactPoints:contactPoint[];
+    contactPoints:contactPointType[];
     firestore:any;
     firebase:any;
     classes:any;
@@ -49,7 +49,7 @@ class ContactPoints extends Component<props, compState> {
   }
   addNewContactPoint() {
       const newCpDocRef = this.props.firestore.collection(contactPointsCollectionName).doc();
-      const cp:contactPoint = {
+      const cp:contactPointType = {
           cpId: newCpDocRef.id,
           name:this.state.addContactPointPopup.name,
           description:this.state.addContactPointPopup.description,
@@ -74,7 +74,7 @@ class ContactPoints extends Component<props, compState> {
           <List className={this.props.classes.root}>
           {
                   this.props.contactPoints ?
-                      this.props.contactPoints.map((cp:contactPoint,index:number) =>{
+                      this.props.contactPoints.map((cp:contactPointType,index:number) =>{
                        return (
                            <ListItem key={index}>
                                <div>
