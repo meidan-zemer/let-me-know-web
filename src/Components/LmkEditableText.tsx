@@ -13,7 +13,7 @@ interface state {
   value: string;
 }
 
-class EditableText extends Component<props, state> {
+class LmkEditableText extends Component<props, state> {
   constructor(props: props) {
     super(props);
     this.state = {
@@ -69,4 +69,4 @@ class EditableText extends Component<props, state> {
   }
 }
 
-export default EditableText;
+export default LmkEditableText;

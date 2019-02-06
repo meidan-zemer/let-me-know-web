@@ -8,7 +8,7 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { match } from 'react-router';
 import { contactPointType, discussionType, messageType } from 'let-me-know-ts-definitions';
-import EditableText from './EditableText';
+import LmkEditableText from './LmkEditableText';
 import {
   contactPointsCollectionName,
   discussionsSubCollectionName,
@@ -157,14 +157,14 @@ class ContactPointDiscussion extends Component<props, state> {
     } else {
       return (
         <div>
-          <EditableText
+          <LmkEditableText
             value={this.props.discussion.title}
             isEditable={this.props.isDiscussionOwner}
             onChange={title => this.updateDiscussionTitle(title)}
             label={undefined}
           />
 
-          <EditableText
+          <LmkEditableText
             value={this.props.discussion.connectorAlias}
             isEditable={this.props.isDiscussionOwner}
             onChange={connectorAlias => this.updateDiscussionConnectorAlias(connectorAlias)}
