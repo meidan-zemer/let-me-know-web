@@ -157,16 +157,18 @@ class ContactPointDiscussion extends Component<props, state> {
     } else {
       return (
         <div>
-          <EditableText value={this.props.discussion.title}
-                        isEditable={this.props.isDiscussionOwner}
-                        onChange={title=>this.updateDiscussionTitle(title)}
-                        label={undefined}
+          <EditableText
+            value={this.props.discussion.title}
+            isEditable={this.props.isDiscussionOwner}
+            onChange={title => this.updateDiscussionTitle(title)}
+            label={undefined}
           />
 
-          <EditableText value={this.props.discussion.connectorAlias}
-                        isEditable={this.props.isDiscussionOwner}
-                        onChange={connectorAlias=>this.updateDiscussionConnectorAlias(connectorAlias)}
-                        label={"Connector Name"}
+          <EditableText
+            value={this.props.discussion.connectorAlias}
+            isEditable={this.props.isDiscussionOwner}
+            onChange={connectorAlias => this.updateDiscussionConnectorAlias(connectorAlias)}
+            label={'Connector Name'}
           />
 
           <List>

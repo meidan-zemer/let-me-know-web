@@ -34,9 +34,6 @@ class Main extends Component<props, state> {
       that.setState({ user: user });
     });
   }
-  googleSignIn() {
-    this.props.firebase.login({ provider: 'google', type: 'popup' }).then((user: any) => this.setState({ user: user }));
-  }
   logout() {
     this.props.firebase.logout().then(() => console.log('logout'));
   }
@@ -51,7 +48,7 @@ class Main extends Component<props, state> {
             <Route exact path="/" component={ContactPoints} />
           </div>
         ) : (
-          <SignIn googleLogin={() => this.googleSignIn()} />
+          <SignIn />
         )}
       </Router>
     );
