@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withFirebase } from 'react-redux-firebase';
 import { Route, Router } from 'react-router-dom';
 import createBrowserHistory from 'history/createBrowserHistory';
-import Header from './Header';
+import Header from '../Common/Header';
 import ContactPoints from './ContactPoints';
 import SignIn from './SignIn';
 import ContactPointDiscussion from './ContactPointDiscussion';

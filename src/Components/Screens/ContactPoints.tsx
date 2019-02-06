@@ -9,7 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import { contactPointType } from 'let-me-know-ts-definitions';
 import { withFirebase } from 'react-redux-firebase';
 import { firestoreConnect } from 'react-redux-firebase';
-import { contactPointsCollectionName } from '../firebaseConfig';
+import { contactPointsCollectionName } from '../../firebaseConfig';
 
 const styles = (theme: any) => ({
   root: {

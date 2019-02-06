@@ -5,8 +5,8 @@ import { withFirebase } from 'react-redux-firebase';
 import GoogleButton from 'react-google-button';
 import LockIcon from '@material-ui/icons/Lock';
 import EmailIcon from '@material-ui/icons/Email';
-import LmkButton from './LmkButton'
-import LmkTextField from './LmkTextField';
+import LmkButton from '../UiComponents/LmkButton'
+import LmkTextField from '../UiComponents/LmkTextField';
 
 
 interface props {

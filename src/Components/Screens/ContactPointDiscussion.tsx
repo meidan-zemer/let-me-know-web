@@ -8,12 +8,12 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { match } from 'react-router';
 import { contactPointType, discussionType, messageType } from 'let-me-know-ts-definitions';
-import LmkEditableText from './LmkEditableText';
+import LmkEditableText from '../UiComponents/LmkEditableText';
 import {
   contactPointsCollectionName,
   discussionsSubCollectionName,
   messagesSubCollectionName,
-} from '../firebaseConfig';
+} from '../../firebaseConfig';
 
 const styles = (theme: any) => ({
   root: {
