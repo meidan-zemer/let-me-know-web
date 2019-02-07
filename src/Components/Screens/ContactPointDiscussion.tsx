@@ -148,7 +148,7 @@ class ContactPointDiscussion extends Component<props, state> {
     return (
       <ListItem key={this.props.messages.length}>
         <div style={{width:'100%'}}>
-          <span style={{width:'95%',display:'inline-grid'}}>
+          <span style={{width:'90%',display:'inline-grid'}}>
             <TextField
                 value={this.state.newMessageContent}
                 onChange={e => this.setState({ newMessageContent: e.target.value })}
