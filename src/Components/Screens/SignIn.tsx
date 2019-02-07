@@ -1,13 +1,12 @@
-import React, { Component,CSSProperties } from 'react';
+import React, { Component, CSSProperties } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withFirebase } from 'react-redux-firebase';
 import GoogleButton from 'react-google-button';
 import LockIcon from '@material-ui/icons/Lock';
 import EmailIcon from '@material-ui/icons/Email';
-import LmkButton from '../UiComponents/LmkButton'
+import LmkButton from '../UiComponents/LmkButton';
 import LmkTextField from '../UiComponents/LmkTextField';
-
 
 interface props {
   firebase: {
@@ -32,9 +31,8 @@ interface state {
 }
 
 class SignIn extends Component<props, state> {
-
-  constructor(props:props){
-      super(props);
+  constructor(props: props) {
+    super(props);
     this.state = {
       signIn: {
         password: '',
@@ -58,80 +56,90 @@ class SignIn extends Component<props, state> {
     const password = this.state.signIn.password;
     this.setState({ ...this.state, signIn: { ...this.state.signIn, err: null }, isSigninInProgress: true });
     this.props.firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => this.setState({ isSigninInProgress: false }))
-        .catch((err: any) => {
-          this.setState({ ...this.state, signIn: { ...this.state.signIn, err: err.message }, isSigninInProgress: false });
-        });
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => this.setState({ isSigninInProgress: false }))
+      .catch((err: any) => {
+        this.setState({ ...this.state, signIn: { ...this.state.signIn, err: err.message }, isSigninInProgress: false });
+      });
   }
   signUp() {
     const email = this.state.signUp.email;
     const password = this.state.signUp.password;
     this.setState({ ...this.state, signUp: { ...this.state.signUp, err: null }, isSigninInProgress: true });
     this.props.firebase
-        .auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then(() =>
-            this.setState({
-              ...this.state,
-              signIn: { ...this.state.signIn, email: email, password: password },
-              isSigninInProgress: false,
-            }),
-        )
-        .catch((err: any) => {
-          this.setState({ ...this.state, signUp: { ...this.state.signUp, err: err.message }, isSigninInProgress: false });
-        });
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() =>
+        this.setState({
+          ...this.state,
+          signIn: { ...this.state.signIn, email: email, password: password },
+          isSigninInProgress: false,
+        }),
+      )
+      .catch((err: any) => {
+        this.setState({ ...this.state, signUp: { ...this.state.signUp, err: err.message }, isSigninInProgress: false });
+      });
   }
   render() {
     return (
       <div style={styles.container}>
         <h1>Let Me Know</h1>
         <div>
-          <h3>{"Sign In"}</h3>
+          <h3>{'Sign In'}</h3>
           <div style={styles.iconTextContainer}>
-              <span style={styles.iconContainer}><EmailIcon/></span>
-              <LmkTextField placeholder={'E-mail'}
-                                   value={this.state.signIn.email}
-                                   onTextChange={t=>this.setState({signIn:{...this.state.signIn,email:t}})}
-              />
+            <span style={styles.iconContainer}>
+              <EmailIcon />
+            </span>
+            <LmkTextField
+              placeholder={'E-mail'}
+              value={this.state.signIn.email}
+              onTextChange={t => this.setState({ signIn: { ...this.state.signIn, email: t } })}
+            />
           </div>
           <div style={styles.iconTextContainer}>
-            <span style={styles.iconContainer}><LockIcon/></span>
-            <LmkTextField placeholder={'Password'}
-                                     value={this.state.signIn.password}
-                                     onTextChange={t=>this.setState({signIn:{...this.state.signIn,password:t}})}
-                                     type={'password'}
-
+            <span style={styles.iconContainer}>
+              <LockIcon />
+            </span>
+            <LmkTextField
+              placeholder={'Password'}
+              value={this.state.signIn.password}
+              onTextChange={t => this.setState({ signIn: { ...this.state.signIn, password: t } })}
+              type={'password'}
             />
           </div>
           <div style={styles.buttonContainer}>
-            <LmkButton onClick={()=>this.signIn()}>{'Sign In'}</LmkButton>
+            <LmkButton onClick={() => this.signIn()}>{'Sign In'}</LmkButton>
           </div>
         </div>
         <div>
-          <h3>{"Sign Up"}</h3>
+          <h3>{'Sign Up'}</h3>
           <div style={styles.iconTextContainer}>
-            <span style={styles.iconContainer}><EmailIcon/></span>
-            <LmkTextField placeholder={'E-mail'}
-                          value={this.state.signUp.email}
-                          onTextChange={t=>this.setState({signUp:{...this.state.signUp,email:t}})}
+            <span style={styles.iconContainer}>
+              <EmailIcon />
+            </span>
+            <LmkTextField
+              placeholder={'E-mail'}
+              value={this.state.signUp.email}
+              onTextChange={t => this.setState({ signUp: { ...this.state.signUp, email: t } })}
             />
           </div>
           <div style={styles.iconTextContainer}>
-            <span style={styles.iconContainer}><LockIcon/></span>
-            <LmkTextField placeholder={'Password'}
-                          value={this.state.signUp.password}
-                          onTextChange={t=>this.setState({signUp:{...this.state.signUp,password:t}})}
-                          type={'password'}
-
+            <span style={styles.iconContainer}>
+              <LockIcon />
+            </span>
+            <LmkTextField
+              placeholder={'Password'}
+              value={this.state.signUp.password}
+              onTextChange={t => this.setState({ signUp: { ...this.state.signUp, password: t } })}
+              type={'password'}
             />
           </div>
           <div style={styles.buttonContainer}>
-            <LmkButton onClick={()=>this.signUp()}>{'Sign Up'}</LmkButton>
+            <LmkButton onClick={() => this.signUp()}>{'Sign Up'}</LmkButton>
           </div>
         </div>
-        <div style={{marginTop:'5%', marginBottom:'5%'}}>
+        <div style={{ marginTop: '5%', marginBottom: '5%' }}>
           <GoogleButton onClick={() => this.googleSignIn()} />
         </div>
       </div>
@@ -139,31 +147,30 @@ class SignIn extends Component<props, state> {
   }
 }
 
-
 const styles = {
-  container:{
+  container: {
     display: 'flex',
-    flexDirection:'column' as CSSProperties["flexDirection"],
+    flexDirection: 'column' as CSSProperties['flexDirection'],
     alignItems: 'center',
     border: 'dashed',
     width: '400px',
     margin: '0 auto',
-    borderColor: 'gray'
+    borderColor: 'gray',
   },
-  buttonContainer:{
+  buttonContainer: {
     marginTop: '5%',
-    marginLeft:'19%'
+    marginLeft: '19%',
   },
-  iconTextContainer:{
+  iconTextContainer: {
     display: 'flex',
-    flexDirection:'row' as CSSProperties["flexDirection"],
+    flexDirection: 'row' as CSSProperties['flexDirection'],
     alignItems: 'center',
-    width:'350px'
+    width: '350px',
   },
-  iconContainer:{
-    marginRight:'4%',
-    marginTop:'3%'
-  }
+  iconContainer: {
+    marginRight: '4%',
+    marginTop: '3%',
+  },
 };
 export default compose(
   withFirebase,
