@@ -15,6 +15,8 @@ import {
   messagesSubCollectionName,
 } from '../../firebaseConfig';
 
+import LmkLoading from '../UiComponents/LmkLoading'
+
 const styles = (theme: any) => ({
   root: {
     width: '100%',
@@ -44,25 +46,6 @@ class ContactPointDiscussion extends Component<props, state> {
   constructor(props: props) {
     super(props);
     this.state = { newMessageContent: '' };
-  }
-
-  renderTimeStamp(ts: any) {
-    if (ts && ts.seconds) {
-      return new Date(ts.seconds * 1000).toDateString();
-    } else {
-      return 'Now';
-    }
-  }
-  renderMessage(msg: messageType, index: number) {
-    return (
-      <ListItem key={index}>
-        <div>
-          <span>{this.renderTimeStamp(msg.createDate)}:</span>
-          <span>{this.getMessageSenderAlias(msg.from)}:</span>
-          <div>{msg.content}</div>
-        </div>
-      </ListItem>
-    );
   }
 
   addDiscussion() {
@@ -96,11 +79,9 @@ class ContactPointDiscussion extends Component<props, state> {
       .doc(this.props.uid)
       .update(updatedDiscussion);
   }
-
   updateDiscussionConnectorAlias(connectorAlias: string) {
     this.updateDiscussion({ connectorAlias });
   }
-
   getMessageSenderAlias(uid: string) {
     if (uid === this.props.uid) {
       return this.props.firebase.auth().currentUser.displayName;
@@ -120,7 +101,6 @@ class ContactPointDiscussion extends Component<props, state> {
       }
     }
   }
-
   sendMessage() {
     const msg: messageType = {
       createDate: this.props.firestore.FieldValue.serverTimestamp(),
@@ -144,13 +124,31 @@ class ContactPointDiscussion extends Component<props, state> {
       });
   }
 
+  renderTimeStamp(ts: any) {
+    if (ts && ts.seconds) {
+      return new Date(ts.seconds * 1000).toDateString();
+    } else {
+      return 'Now';
+    }
+  }
+  renderMessage(msg: messageType, index: number) {
+    return (
+        <ListItem key={index}>
+          <div>
+            <span>{this.renderTimeStamp(msg.createDate)}:</span>
+            <span>{this.getMessageSenderAlias(msg.from)}:</span>
+            <div>{msg.content}</div>
+          </div>
+        </ListItem>
+    );
+  }
   render() {
     if (!this.props.loaded) {
-      return <div>Loading...</div>;
+      return <LmkLoading text={"Loading...."}/>;
     } else if (isEmpty(this.props.discussion)) {
       if (this.props.isDiscussionOwner) {
         this.addDiscussion();
-        return <div>Loading...</div>;
+        return <LmkLoading text={"Loading...."}/>;
       } else {
         return <div>Not found</div>;
       }
