@@ -105,7 +105,7 @@ class SignIn extends Component<props, state> {
 
             />
           </div>
-          <div style={{marginTop: '5%',width:'100%'}}>
+          <div style={styles.buttonContainer}>
             <LmkButton onClick={()=>this.signIn()}>{'Sign In'}</LmkButton>
           </div>
         </div>
@@ -127,7 +127,7 @@ class SignIn extends Component<props, state> {
 
             />
           </div>
-          <div style={{marginTop: '5%',width:'100%'}}>
+          <div style={styles.buttonContainer}>
             <LmkButton onClick={()=>this.signUp()}>{'Sign Up'}</LmkButton>
           </div>
         </div>
@@ -150,15 +150,19 @@ const styles = {
     margin: '0 auto',
     borderColor: 'gray'
   },
+  buttonContainer:{
+    marginTop: '5%',
+    marginLeft:'19%'
+  },
   iconTextContainer:{
     display: 'flex',
     flexDirection:'row' as CSSProperties["flexDirection"],
-    alignItems: 'center'
-
+    alignItems: 'center',
+    width:'350px'
   },
   iconContainer:{
     marginRight:'4%',
-    marginTop:'9%'
+    marginTop:'3%'
   }
 };
 export default compose(
