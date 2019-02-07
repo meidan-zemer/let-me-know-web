@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,CSSProperties } from 'react';
 
 interface props {
   title: string;
@@ -18,13 +18,11 @@ class LmkMainTitle extends Component<props> {
 
 const styles = {
   view: {
-    flex: 1,
-    marginTop: '10%',
-    marginLeft: '2%',
-    width: '80%',
+    textAlign:'center' as CSSProperties['textAlign']
   },
   text: {
-    fontSize: 25,
+    fontSize: 20,
+    color:'gray'
   },
 };
 

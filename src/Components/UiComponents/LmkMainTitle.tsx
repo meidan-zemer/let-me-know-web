@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,CSSProperties } from 'react';
 
 interface props {
   title: string;
@@ -7,7 +7,7 @@ class LmkMainTitle extends Component<props> {
   render() {
     return (
       <div style={styles.view}>
-        <span style={styles.text}>
+        <span  style={styles.text}>
           {this.props.title}
         </span>
       </div>
@@ -17,10 +17,7 @@ class LmkMainTitle extends Component<props> {
 
 const styles = {
   view: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: '5%',
+    textAlign:'center' as CSSProperties['textAlign']
   },
   text: {
     fontSize: 40,

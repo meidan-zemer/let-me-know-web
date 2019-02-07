@@ -93,6 +93,7 @@ class SignIn extends Component<props, state> {
             </span>
             <LmkTextField
               placeholder={'E-mail'}
+              type={'email'}
               value={this.state.signIn.email}
               onTextChange={t => this.setState({ signIn: { ...this.state.signIn, email: t } })}
             />
@@ -120,6 +121,7 @@ class SignIn extends Component<props, state> {
             </span>
             <LmkTextField
               placeholder={'E-mail'}
+              type={'email'}
               value={this.state.signUp.email}
               onTextChange={t => this.setState({ signUp: { ...this.state.signUp, email: t } })}
             />

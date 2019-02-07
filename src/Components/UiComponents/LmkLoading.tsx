@@ -22,7 +22,7 @@ const styles={
 export  default (props:props) => {
     return (
         <div style={styles.loadContainer}>
-            {props.text ? <h3 style={styles.text}>{props.text}</h3>: null}
+             <h3 style={styles.text}>{props.text ? props.text : "Loading..."}</h3>
             <BarLoader color={'#2089dc'}/>
         </div>
     );

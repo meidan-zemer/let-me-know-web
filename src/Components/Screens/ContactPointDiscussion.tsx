@@ -8,14 +8,16 @@ import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { match } from 'react-router';
 import { contactPointType, discussionType, messageType } from 'let-me-know-ts-definitions';
-import LmkEditableText from '../UiComponents/LmkEditableText';
+import SendIcon from '@material-ui/icons/Send';
+import LmkLoading from '../UiComponents/LmkLoading'
+import LmkSubTitle from '../UiComponents/LmkSubTitle';
+import LmkMainTitle from '../UiComponents/LmkMainTitle';
 import {
   contactPointsCollectionName,
   discussionsSubCollectionName,
   messagesSubCollectionName,
 } from '../../firebaseConfig';
 
-import LmkLoading from '../UiComponents/LmkLoading'
 
 const styles = (theme: any) => ({
   root: {
@@ -135,54 +137,53 @@ class ContactPointDiscussion extends Component<props, state> {
     return (
         <ListItem key={index}>
           <div>
-            <span>{this.renderTimeStamp(msg.createDate)}:</span>
-            <span>{this.getMessageSenderAlias(msg.from)}:</span>
+            <span style={{fontWeight:'bold'}}>{this.getMessageSenderAlias(msg.from)+' '}</span>
+            <span>{this.renderTimeStamp(msg.createDate)}</span>
             <div>{msg.content}</div>
           </div>
         </ListItem>
     );
   }
+  renderNewMessage(){
+    return (
+      <ListItem key={this.props.messages.length}>
+        <div style={{width:'100%'}}>
+          <span style={{width:'95%',display:'inline-grid'}}>
+            <TextField
+                value={this.state.newMessageContent}
+                onChange={e => this.setState({ newMessageContent: e.target.value })}
+                fullWidth={true}
+            />
+          </span>
+          <SendIcon color={'primary'}  onClick={() => this.sendMessage()}/>
+        </div>
+      </ListItem>
+    );
+  }
   render() {
     if (!this.props.loaded) {
-      return <LmkLoading text={"Loading...."}/>;
+      return <LmkLoading/>;
     } else if (isEmpty(this.props.discussion)) {
       if (this.props.isDiscussionOwner) {
         this.addDiscussion();
-        return <LmkLoading text={"Loading...."}/>;
+        return <LmkLoading/>;
       } else {
         return <div>Not found</div>;
       }
     } else {
       return (
-        <div>
-          <LmkEditableText
-            value={this.props.discussion.title}
-            isEditable={this.props.isDiscussionOwner}
-            onChange={title => this.updateDiscussionTitle(title)}
-            label={undefined}
-          />
-
-          <LmkEditableText
-            value={this.props.discussion.connectorAlias}
-            isEditable={this.props.isDiscussionOwner}
-            onChange={connectorAlias => this.updateDiscussionConnectorAlias(connectorAlias)}
-            label={'Connector Name'}
-          />
-
+        <div style={{display:"flex", flexDirection:'column'}}>
+          <div style={{alignSelf:'center'}}>
+            <LmkMainTitle title={this.props.discussion.title}/>
+            <LmkSubTitle title={  'Created By ' +
+            this.props.discussion.connectorAlias +
+            ' on ' +
+            this.renderTimeStamp(this.props.discussion.createdDate)}/>
+          </div>
           <List>
             {this.props.messages
               .map((m, i) => this.renderMessage(m, i))
-              .concat([
-                <ListItem key={this.props.messages.length}>
-                  <div>
-                    <TextField
-                      value={this.state.newMessageContent}
-                      onChange={e => this.setState({ newMessageContent: e.target.value })}
-                    />
-                    <button onClick={() => this.sendMessage()}>Send</button>
-                  </div>
-                </ListItem>,
-              ])}
+              .concat([this.renderNewMessage() ])}
           </List>
         </div>
       );
