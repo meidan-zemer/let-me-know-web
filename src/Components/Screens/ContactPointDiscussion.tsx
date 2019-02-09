@@ -9,15 +9,15 @@ import { withStyles } from '@material-ui/core/styles';
 import { match } from 'react-router';
 import { contactPointType, discussionType, messageType } from 'let-me-know-ts-definitions';
 import SendIcon from '@material-ui/icons/Send';
-import LmkLoading from '../UiComponents/LmkLoading'
+import LmkLoading from '../UiComponents/LmkLoading';
 import LmkSubTitle from '../UiComponents/LmkSubTitle';
 import LmkMainTitle from '../UiComponents/LmkMainTitle';
+import LmkButton from '../UiComponents/LmkButton';
 import {
   contactPointsCollectionName,
   discussionsSubCollectionName,
   messagesSubCollectionName,
 } from '../../firebaseConfig';
-
 
 const styles = (theme: any) => ({
   root: {
@@ -42,18 +42,34 @@ interface props {
 
 interface state {
   newMessageContent: string;
+  editMode: boolean;
+  title: string;
+  alias: string;
+  updating:boolean;
 }
 
 class ContactPointDiscussion extends Component<props, state> {
   constructor(props: props) {
     super(props);
-    this.state = { newMessageContent: '' };
+    let title = '',
+      alias = '';
+    if (!isEmpty(props.discussion)) {
+      title = props.discussion.title;
+      alias = props.discussion.connectorAlias;
+    }
+    this.state = {
+      newMessageContent: '',
+      editMode: false,
+        updating:false,
+      alias,
+      title
+    };
   }
 
   addDiscussion() {
     let desc: discussionType = {
       connectorId: this.props.uid,
-      connectorAlias: 'John Due',
+      connectorAlias: '',
       title: this.props.cp.name,
       modifiedDate: this.props.firestore.FieldValue.serverTimestamp(),
       createdDate: this.props.firestore.FieldValue.serverTimestamp(),
@@ -63,10 +79,10 @@ class ContactPointDiscussion extends Component<props, state> {
       .doc(this.props.cp.cpId)
       .collection(discussionsSubCollectionName)
       .doc(this.props.uid);
-    newdiscussionDocRef.set(desc);
+    newdiscussionDocRef.set(desc).then(()=>this.setState({editMode:true}));
   }
   updateDiscussionTitle(title: string) {
-    this.updateDiscussion({ title });
+    return this.updateDiscussion({ title });
   }
   updateDiscussion(obj: any) {
     let updatedDiscussion = {
@@ -74,7 +90,7 @@ class ContactPointDiscussion extends Component<props, state> {
       ...obj,
       modifiedDate: this.props.firestore.FieldValue.serverTimestamp(),
     };
-    this.props.firestore
+    return this.props.firestore
       .collection(contactPointsCollectionName)
       .doc(this.props.cp.cpId)
       .collection(discussionsSubCollectionName)
@@ -82,11 +98,13 @@ class ContactPointDiscussion extends Component<props, state> {
       .update(updatedDiscussion);
   }
   updateDiscussionConnectorAlias(connectorAlias: string) {
-    this.updateDiscussion({ connectorAlias });
+    return this.updateDiscussion({ connectorAlias });
   }
   getMessageSenderAlias(uid: string) {
     if (uid === this.props.uid) {
-      return this.props.firebase.auth().currentUser.displayName;
+      return this.props.firebase.auth().currentUser.displayName
+        ? this.props.firebase.auth().currentUser.displayName
+        : this.props.firebase.auth().currentUser.email;
     } else {
       if (uid === this.props.discussion.connectorId) {
         if (this.props.discussion.connectorAlias) {
@@ -125,7 +143,6 @@ class ContactPointDiscussion extends Component<props, state> {
         console.log(err);
       });
   }
-
   renderTimeStamp(ts: any) {
     if (ts && ts.seconds) {
       return new Date(ts.seconds * 1000).toDateString();
@@ -135,56 +152,93 @@ class ContactPointDiscussion extends Component<props, state> {
   }
   renderMessage(msg: messageType, index: number) {
     return (
-        <ListItem key={index}>
-          <div>
-            <span style={{fontWeight:'bold'}}>{this.getMessageSenderAlias(msg.from)+' '}</span>
-            <span>{this.renderTimeStamp(msg.createDate)}</span>
-            <div>{msg.content}</div>
-          </div>
-        </ListItem>
-    );
-  }
-  renderNewMessage(){
-    return (
-      <ListItem key={this.props.messages.length}>
-        <div style={{width:'100%'}}>
-          <span style={{width:'90%',display:'inline-grid'}}>
-            <TextField
-                value={this.state.newMessageContent}
-                onChange={e => this.setState({ newMessageContent: e.target.value })}
-                fullWidth={true}
-            />
-          </span>
-          <SendIcon color={'primary'}  onClick={() => this.sendMessage()}/>
+      <ListItem key={index}>
+        <div>
+          <span style={{ fontWeight: 'bold' }}>{this.getMessageSenderAlias(msg.from) + ' '}</span>
+          <span>{this.renderTimeStamp(msg.createDate)}</span>
+          <div>{msg.content}</div>
         </div>
       </ListItem>
     );
   }
+  renderNewMessage() {
+    return (
+      <ListItem key={this.props.messages.length}>
+        <div style={{ width: '100%' }}>
+          <span style={{ width: '90%', display: 'inline-grid' }}>
+            <TextField
+              value={this.state.newMessageContent}
+              onChange={e => this.setState({ newMessageContent: e.target.value })}
+              fullWidth={true}
+            />
+          </span>
+          <SendIcon color={'primary'} onClick={() => this.sendMessage()} />
+        </div>
+      </ListItem>
+    );
+  }
+  renderEditDiscussion() {
+    return (
+      <div>
+          <span>
+        <TextField
+          value={this.state.title}
+          onChange={event => this.setState({ title: event.target.value })}
+          label={'Enter Discussion Title'}
+        />
+          </span>
+          <span style={{marginLeft:'5%'}}>
+        <TextField
+            value={this.state.alias}
+            onChange={event => this.setState({ alias: event.target.value })}
+            label={'Enter Connector Name'}
+        />
+          </span>
+          <div style={{marginTop:'5%'}}>
+              <LmkButton
+                  onClick={() => {
+                      this.setState({updating:true})
+                      this.updateDiscussionTitle(this.state.title)
+                          .then(()=>this.updateDiscussionConnectorAlias(this.state.alias))
+                          .then(()=>this.setState({editMode:false,updating:false}));
+                  }}
+              >
+                  {'Update'}
+              </LmkButton>
+          </div>
+      </div>
+    );
+  }
   render() {
-    if (!this.props.loaded) {
-      return <LmkLoading/>;
+    if (!this.props.loaded || this.state.updating) {
+      return <LmkLoading />;
     } else if (isEmpty(this.props.discussion)) {
       if (this.props.isDiscussionOwner) {
         this.addDiscussion();
-        return <LmkLoading/>;
+        return <LmkLoading />;
       } else {
         return <div>Not found</div>;
       }
-    } else {
-      return (
-        <div style={{display:"flex", flexDirection:'column'}}>
-          <div style={{alignSelf:'center'}}>
-            <LmkMainTitle title={this.props.discussion.title}/>
-            <LmkSubTitle title={  'Created By ' +
-            this.props.discussion.connectorAlias +
-            ' on ' +
-            this.renderTimeStamp(this.props.discussion.createdDate)}/>
+    } if(this.state.editMode){
+        return this.renderEditDiscussion();
+      } else {
+    return (
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div style={{ alignSelf: 'center' }}>
+            <LmkMainTitle title={this.props.discussion.title} />
+            <LmkSubTitle
+              title={
+                'Created By ' +
+                this.props.discussion.connectorAlias +
+                ' on ' +
+                this.renderTimeStamp(this.props.discussion.createdDate)
+              }
+            />
           </div>
-          <List>
-            {this.props.messages
-              .map((m, i) => this.renderMessage(m, i))
-              .concat([this.renderNewMessage() ])}
-          </List>
+          {this.props.isDiscussionOwner ? (
+            <LmkButton onClick={() => this.setState({editMode:true, title:this.props.discussion.title,alias:this.props.discussion.connectorAlias})} >{'Edit'}</LmkButton>
+          ) : null}
+          <List>{this.props.messages.map((m, i) => this.renderMessage(m, i)).concat([this.renderNewMessage()])}</List>
         </div>
       );
     }

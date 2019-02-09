@@ -1,29 +1,29 @@
-import React,{CSSProperties} from 'react'
+import React, { CSSProperties } from 'react';
 import BarLoader from 'react-spinners/ClipLoader';
 
 interface props {
-    text?:string;
+  text?: string;
 }
 
-const styles={
-    loadContainer:{
-        top:'50%' as CSSProperties['top'],
-        left:'50%' as CSSProperties['left'],
-        position: 'absolute' as CSSProperties['position'],
-    },
-    text:{
-        marginTop:'-70%' as CSSProperties['marginTop'],
-        marginLeft:'-50%' as CSSProperties['marginLeft'],
-        position: 'absolute' as CSSProperties['position'],
-        color:'gray'
-    }
+const styles = {
+  loadContainer: {
+    top: '50%' as CSSProperties['top'],
+    left: '50%' as CSSProperties['left'],
+    position: 'absolute' as CSSProperties['position'],
+  },
+  text: {
+    marginTop: '-70%' as CSSProperties['marginTop'],
+    marginLeft: '-50%' as CSSProperties['marginLeft'],
+    position: 'absolute' as CSSProperties['position'],
+    color: 'gray',
+  },
 };
 
-export  default (props:props) => {
-    return (
-        <div style={styles.loadContainer}>
-             <h3 style={styles.text}>{props.text ? props.text : "Loading..."}</h3>
-            <BarLoader color={'#2089dc'}/>
-        </div>
-    );
-}
+export default (props: props) => {
+  return (
+    <div style={styles.loadContainer}>
+      <h3 style={styles.text}>{props.text ? props.text : 'Loading...'}</h3>
+      <BarLoader color={'#2089dc'} />
+    </div>
+  );
+};
