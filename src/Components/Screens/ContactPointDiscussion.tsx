@@ -7,17 +7,18 @@ import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { match } from 'react-router';
-import { contactPointType, discussionType, messageType } from 'let-me-know-common';
+import { contactPointType,
+  discussionType,
+  messageType,
+  contactPointsCollectionName,
+  discussionsSubCollectionName,
+  messagesSubCollectionName,
+  getTimeDate} from 'let-me-know-common';
 import SendIcon from '@material-ui/icons/Send';
 import LmkLoading from '../UiComponents/LmkLoading';
 import LmkSubTitle from '../UiComponents/LmkSubTitle';
 import LmkMainTitle from '../UiComponents/LmkMainTitle';
 import LmkButton from '../UiComponents/LmkButton';
-import {
-  contactPointsCollectionName,
-  discussionsSubCollectionName,
-  messagesSubCollectionName,
-} from '../../firebaseConfig';
 
 const styles = (theme: any) => ({
   root: {
@@ -145,7 +146,7 @@ class ContactPointDiscussion extends Component<props, state> {
   }
   renderTimeStamp(ts: any) {
     if (ts && ts.seconds) {
-      return new Date(ts.seconds * 1000).toDateString();
+      return getTimeDate(ts.seconds*1000);
     } else {
       return 'Now';
     }
