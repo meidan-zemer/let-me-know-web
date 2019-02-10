@@ -7,13 +7,15 @@ import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { match } from 'react-router';
-import { contactPointType,
+import {
+  contactPointType,
   discussionType,
   messageType,
   contactPointsCollectionName,
   discussionsSubCollectionName,
   messagesSubCollectionName,
-  getTimeDate} from 'let-me-know-common';
+  getTimeDate,
+} from 'let-me-know-common';
 import SendIcon from '@material-ui/icons/Send';
 import LmkLoading from '../UiComponents/LmkLoading';
 import LmkSubTitle from '../UiComponents/LmkSubTitle';
@@ -46,7 +48,7 @@ interface state {
   editMode: boolean;
   title: string;
   alias: string;
-  updating:boolean;
+  updating: boolean;
 }
 
 class ContactPointDiscussion extends Component<props, state> {
@@ -61,9 +63,9 @@ class ContactPointDiscussion extends Component<props, state> {
     this.state = {
       newMessageContent: '',
       editMode: false,
-        updating:false,
+      updating: false,
       alias,
-      title
+      title,
     };
   }
 
@@ -80,7 +82,7 @@ class ContactPointDiscussion extends Component<props, state> {
       .doc(this.props.cp.cpId)
       .collection(discussionsSubCollectionName)
       .doc(this.props.uid);
-    newdiscussionDocRef.set(desc).then(()=>this.setState({editMode:true}));
+    newdiscussionDocRef.set(desc).then(() => this.setState({ editMode: true }));
   }
   updateDiscussionTitle(title: string) {
     return this.updateDiscussion({ title });
@@ -146,7 +148,7 @@ class ContactPointDiscussion extends Component<props, state> {
   }
   renderTimeStamp(ts: any) {
     if (ts && ts.seconds) {
-      return getTimeDate(ts.seconds*1000);
+      return getTimeDate(ts.seconds * 1000);
     } else {
       return 'Now';
     }
@@ -181,32 +183,36 @@ class ContactPointDiscussion extends Component<props, state> {
   renderEditDiscussion() {
     return (
       <div>
-          <span>
-        <TextField
-          value={this.state.title}
-          onChange={event => this.setState({ title: event.target.value })}
-          label={'Enter Discussion Title'}
-        />
-          </span>
-          <span style={{marginLeft:'5%'}}>
-        <TextField
+        <div>
+            <LmkMainTitle title={this.props.cp.name}/>
+            <LmkSubTitle title={this.props.cp.description}/>
+        </div>
+        <span>
+          <TextField
+            value={this.state.title}
+            onChange={event => this.setState({ title: event.target.value })}
+            label={'Enter Discussion Title'}
+          />
+        </span>
+        <span style={{ marginLeft: '5%' }}>
+          <TextField
             value={this.state.alias}
             onChange={event => this.setState({ alias: event.target.value })}
             label={'Enter Connector Name'}
-        />
-          </span>
-          <div style={{marginTop:'5%'}}>
-              <LmkButton
-                  onClick={() => {
-                      this.setState({updating:true})
-                      this.updateDiscussionTitle(this.state.title)
-                          .then(()=>this.updateDiscussionConnectorAlias(this.state.alias))
-                          .then(()=>this.setState({editMode:false,updating:false}));
-                  }}
-              >
-                  {'Update'}
-              </LmkButton>
-          </div>
+          />
+        </span>
+        <div style={{ marginTop: '5%' }}>
+          <LmkButton
+            onClick={() => {
+              this.setState({ updating: true });
+              this.updateDiscussionTitle(this.state.title)
+                .then(() => this.updateDiscussionConnectorAlias(this.state.alias))
+                .then(() => this.setState({ editMode: false, updating: false }));
+            }}
+          >
+            {'Update'}
+          </LmkButton>
+        </div>
       </div>
     );
   }
@@ -220,16 +226,19 @@ class ContactPointDiscussion extends Component<props, state> {
       } else {
         return <div>Not found</div>;
       }
-    } if(this.state.editMode){
-        return this.renderEditDiscussion();
-      } else {
-    return (
+    }
+    if (this.state.editMode) {
+      return this.renderEditDiscussion();
+    } else {
+      return (
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           <div style={{ alignSelf: 'center' }}>
-            <LmkMainTitle title={this.props.discussion.title} />
+            <LmkMainTitle title={this.props.cp.name} />
             <LmkSubTitle
               title={
-                'Created By ' +
+                'Discussion:' +
+                this.props.discussion.title +
+                ' Created By ' +
                 this.props.discussion.connectorAlias +
                 ' on ' +
                 this.renderTimeStamp(this.props.discussion.createdDate)
@@ -237,7 +246,17 @@ class ContactPointDiscussion extends Component<props, state> {
             />
           </div>
           {this.props.isDiscussionOwner ? (
-            <LmkButton onClick={() => this.setState({editMode:true, title:this.props.discussion.title,alias:this.props.discussion.connectorAlias})} >{'Edit'}</LmkButton>
+            <LmkButton
+              onClick={() =>
+                this.setState({
+                  editMode: true,
+                  title: this.props.discussion.title,
+                  alias: this.props.discussion.connectorAlias,
+                })
+              }
+            >
+              {'Edit'}
+            </LmkButton>
           ) : null}
           <List>{this.props.messages.map((m, i) => this.renderMessage(m, i)).concat([this.renderNewMessage()])}</List>
         </div>

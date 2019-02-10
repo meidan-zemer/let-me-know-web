@@ -6,10 +6,9 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { contactPointType,contactPointsCollectionName } from 'let-me-know-common';
+import { contactPointType, contactPointsCollectionName } from 'let-me-know-common';
 import { withFirebase } from 'react-redux-firebase';
 import { firestoreConnect } from 'react-redux-firebase';
-
 
 const styles = (theme: any) => ({
   root: {
