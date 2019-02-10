@@ -7,6 +7,7 @@
     "@material-ui/icons": "^3.0.2",
     "firebase": "^5.8.0",
     "install": "^0.12.2",
+    "let-me-know-common": "git+https://github.com/meidan-zemer/let-me-know-common.git#master",
     "npm": "^6.7.0",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
@@ -48,7 +49,6 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/redux": "^3.6.0",
     "firebase-tools": "^6.3.0",
-    "let-me-know-ts-definitions": "git+https://github.com/meidan-zemer/let-me-know-ts-definitions.git#master",
     "prettier": "^1.16.0",
     "typescript": "3.2.2"
   }

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { contactPointType } from 'let-me-know-ts-definitions';
+import { contactPointType } from 'let-me-know-common';
 import { withFirebase } from 'react-redux-firebase';
 import { firestoreConnect } from 'react-redux-firebase';
 import { contactPointsCollectionName } from '../../firebaseConfig';

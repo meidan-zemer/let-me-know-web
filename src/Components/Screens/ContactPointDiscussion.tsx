@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import { withStyles } from '@material-ui/core/styles';
 import { match } from 'react-router';
-import { contactPointType, discussionType, messageType } from 'let-me-know-ts-definitions';
+import { contactPointType, discussionType, messageType } from 'let-me-know-common';
 import SendIcon from '@material-ui/icons/Send';
 import LmkLoading from '../UiComponents/LmkLoading';
 import LmkSubTitle from '../UiComponents/LmkSubTitle';

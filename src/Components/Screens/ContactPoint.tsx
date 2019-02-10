@@ -8,8 +8,9 @@ import ListItem from '@material-ui/core/ListItem';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { withStyles } from '@material-ui/core/styles';
 import { match, Redirect } from 'react-router';
-import { contactPointType, discussionType } from 'let-me-know-ts-definitions';
+import {contactPointType, discussionType } from 'let-me-know-common';
 import { contactPointsCollectionName, discussionsSubCollectionName } from '../../firebaseConfig';
+
 
 const styles = (theme: any) => ({
   root: {
